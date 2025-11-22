@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>FutureNetwork</title>
+</head>
+<body>
+    <div class="background-glow" aria-hidden="true">
+        <div class="orb orb-a"></div>
+        <div class="orb orb-b"></div>
+        <div class="orb orb-c"></div>
+        <div class="gradient-overlay"></div>
+    </div>
+    <header class="app-header">
+        <div class="branding">
+            <h1>FutureNetwork</h1>
+            <h2>Monitoramento de Condição de trabalho</h2>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="Alternar tema" title="Alternar tema">
+            <span class="toggle-icon" aria-hidden="true">🌙</span>
+            <span class="toggle-text">Tema</span>
+        </button>
+    </header>
+
+    <main class="dashboard" role="main">
+        <section class="cards" aria-label="Leituras de sensores">
+    <div class="card" tabindex="0">
+        <div class="card-top">
+            <span class="card-icon" aria-hidden="true">🌡️</span>
+            <span class="label">Temperatura</span>
+        </div>
+        <div class="valor">
+            <span id="temp">54,9</span> <span class="unit">°C</span>
+        </div>
+    </div>
+
+    <div class="card" tabindex="0">
+        <div class="card-top">
+            <span class="card-icon" aria-hidden="true">💧</span>
+            <span class="label">Umidade</span>
+        </div>
+        <div class="valor">
+            <span id="umid">41</span> <span class="unit">%</span>
+        </div>
+    </div>
+
+    <div class="card" tabindex="0">
+        <div class="card-top">
+            <span class="card-icon" aria-hidden="true">📏</span>
+            <span class="label">Distância</span>
+        </div>
+        <div class="valor">
+            <span id="dist">163</span> <span class="unit">cm</span>
+        </div>
+    </div>
+
+    <div class="card" tabindex="0">
+        <div class="card-top">
+            <span class="card-icon" aria-hidden="true">🧍‍♂️</span>
+            <span class="label">Movimento</span>
+        </div>
+        <div class="valor">
+            <span id="mov">NÃO</span>
+        </div>
+    </div>
+</section>
+
+
+    </main>
+
+    <footer class="app-footer">
+        <p>FutureNetwork • Desenvolvido por <span class="brand">Kaio Galvão</span></p>
+    </footer>
+
+    <script>
+        const BASE_URL = "http://44.223.43.74:1026/v2/entities/urn:ngsi-ld:device:002/attrs/";
+        const ENDPOINTS = { temp: BASE_URL + "t", umid: BASE_URL + "u", dist: BASE_URL + "d", mov: BASE_URL + "m" };
+        const FIWARE_HEADERS = { "Fiware-Service": "smart", "Fiware-ServicePath": "/", "Accept": "application/json" };
+
+        function buscarAtributo(url, elementoID, transform = x => x) {
+            fetch(url, { method: "GET", headers: FIWARE_HEADERS })
+                .then(res => res.json())
+                .then(data => {
+                    const valor = (data && data.value !== undefined) ? transform(data.value) : "--";
+                    const el = document.getElementById(elementoID);
+                    if (el) el.textContent = valor;
+                })
+                .catch(err => console.log("Erro ao consultar:", url, err));
+        }
+
+        function atualizarTudo() {
+            buscarAtributo(ENDPOINTS.temp, "temp");
+            buscarAtributo(ENDPOINTS.umid, "umid");
+            buscarAtributo(ENDPOINTS.dist, "dist");
+            buscarAtributo(ENDPOINTS.mov, "mov", val => val == 1 ? "SIM" : "NÃO");
+        }
+
+        atualizarTudo();
+        setInterval(atualizarTudo, 5000);
+
+        // Tema (dark / light) com persistência
+        const themeToggle = document.getElementById('themeToggle');
+        const root = document.documentElement;
+
+        function aplicarTema(t) {
+            root.setAttribute('data-theme', t);
+            themeToggle.querySelector('.toggle-icon').textContent = t === 'dark' ? '🌙' : '☀️';
+        }
+
+        const salvo = localStorage.getItem('theme') || 'dark';
+        aplicarTema(salvo);
+
+        themeToggle.addEventListener('click', () => {
+            const atual = root.getAttribute('data-theme');
+            const prox = atual === 'dark' ? 'light' : 'dark';
+            aplicarTema(prox);
+            localStorage.setItem('theme', prox);
+        });
+
+        // Reduz animações para quem prefere
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.body.classList.add('reduce-motion');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+/* =========================
+   Reset básico / layout
+   ========================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --radius-lg: 1.25rem;
+    --radius-full: 999px;
+    --transition-fast: 160ms ease-out;
+    --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.75);
+    --border-width: 1px;
+
+    /* fonte */
+    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+}
+
+/* Tema escuro (padrão) */
+:root[data-theme="dark"] {
+    --bg-body: radial-gradient(
+            circle at top left,
+            #1e293b 0,
+            #020617 32%,
+            #000 70%
+        );
+    --bg-surface: rgba(15, 23, 42, 0.92);
+    --bg-surface-soft: rgba(15, 23, 42, 0.7);
+    --bg-card-highlight: rgba(59, 130, 246, 0.16);
+
+    --accent: #38bdf8;
+    --accent-soft: rgba(56, 189, 248, 0.12);
+    --accent-strong: #0ea5e9;
+
+    --text-primary: #e5e7eb;
+    --text-muted: #9ca3af;
+    --text-subtle: #6b7280;
+
+    --border-subtle: rgba(148, 163, 184, 0.35);
+}
+
+/* Tema claro */
+:root[data-theme="light"] {
+    --bg-body: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 48%);
+    --bg-surface: rgba(255, 255, 255, 0.92);
+    --bg-surface-soft: rgba(248, 250, 252, 0.9);
+    --bg-card-highlight: rgba(59, 130, 246, 0.08);
+
+    --accent: #2563eb;
+    --accent-soft: rgba(37, 99, 235, 0.08);
+    --accent-strong: #1d4ed8;
+
+    --text-primary: #0f172a;
+    --text-muted: #4b5563;
+    --text-subtle: #6b7280;
+
+    --border-subtle: rgba(148, 163, 184, 0.45);
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg-body);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* container principal */
+.dashboard {
+    flex: 1;
+    max-width: 1120px;
+    margin: 1.5rem auto 1.75rem;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================
+   Background futurista
+   ========================= */
+.background-glow {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(40px);
+    opacity: 0.75;
+    mix-blend-mode: screen;
+    will-change: transform;
+    animation: float 18s infinite alternate ease-in-out;
+}
+
+.orb-a {
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, #22d3ee 0, transparent 60%);
+    top: -40px;
+    left: -80px;
+}
+
+.orb-b {
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, #22c55e 0, transparent 60%);
+    bottom: -60px;
+    right: -40px;
+    animation-delay: 4s;
+}
+
+.orb-c {
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, #4f46e5 0, transparent 65%);
+    top: 40%;
+    right: 15%;
+    animation-delay: 8s;
+}
+
+.gradient-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.5), transparent),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.98));
+}
+
+/* redução de movimento */
+.reduce-motion .orb {
+    animation: none !important;
+}
+
+@keyframes float {
+    from {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+        transform: translate3d(30px, 20px, 0) scale(1.07);
+    }
+}
+
+/* =========================
+   Header
+   ========================= */
+.app-header {
+    position: relative;
+    z-index: 1;
+    max-width: 1120px;
+    margin: 1.5rem auto 0.75rem;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.branding h1 {
+    font-size: 1.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.branding h1::before {
+    content: "";
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, var(--accent-strong), transparent 65%);
+    box-shadow: 0 0 0 6px var(--accent-soft);
+}
+
+.branding h2 {
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+    color: var(--text-muted);
+}
+
+/* botão de tema */
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    border: var(--border-width) solid var(--border-subtle);
+    background: linear-gradient(
+        135deg,
+        var(--bg-surface-soft),
+        rgba(15, 23, 42, 0.2)
+    );
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: background var(--transition-fast),
+        border-color var(--transition-fast), transform var(--transition-fast),
+        box-shadow var(--transition-fast), opacity var(--transition-fast);
+}
+
+.theme-toggle:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 36px rgba(15, 23, 42, 0.65);
+}
+
+.theme-toggle:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.toggle-icon {
+    font-size: 1.1rem;
+}
+
+.toggle-text {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* =========================
+   Cards
+   ========================= */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.75rem;
+}
+
+.card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: var(--border-width) solid var(--border-subtle);
+    background: radial-gradient(circle at top left, var(--bg-card-highlight), transparent),
+        linear-gradient(
+            135deg,
+            rgba(15, 23, 42, 0.92),
+            rgba(15, 23, 42, 0.84)
+        );
+    box-shadow: var(--shadow-soft);
+    padding: 1.1rem 1.1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: border-color var(--transition-fast),
+        transform var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), opacity var(--transition-fast);
+}
+
+html[data-theme="light"] .card {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.96),
+        rgba(241, 245, 249, 0.96)
+    );
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        circle at top right,
+        rgba(56, 189, 248, 0.12),
+        transparent 55%
+    );
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    pointer-events: none;
+}
+
+.card:hover,
+.card:focus-visible {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.9);
+}
+
+.card:hover::after,
+.card:focus-visible::after {
+    opacity: 1;
+}
+
+.card:focus-visible {
+    outline: 2px solid var(--accent-strong);
+    outline-offset: 3px;
+}
+
+/* topo do card com ícone + label */
+.card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    margin-bottom: 0.15rem;
+}
+
+.card-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+    box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.5);
+}
+
+/* label & valor */
+.label {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-subtle);
+    font-weight: 600;
+}
+
+.valor {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.unit {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+}
+
+/* =========================
+   Footer
+   ========================= */
+.app-footer {
+    position: relative;
+    z-index: 1;
+    padding: 0.75rem 1.5rem 1.4rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.app-footer .brand {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+/* =========================
+   Responsividade
+   ========================= */
+@media (max-width: 720px) {
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .dashboard {
+        margin-top: 1.25rem;
+        padding-inline: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .branding h1 {
+        font-size: 1.5rem;
+    }
+
+    .valor {
+        font-size: 1.5rem;
+    }
+}
