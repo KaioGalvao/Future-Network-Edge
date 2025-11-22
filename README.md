@@ -78,15 +78,7 @@ O sistema foi montado fisicamente em protoboard e também validado em ambiente d
 
 ---
 
-## 📌 Próximos Passos (Sugestões)
-
-- Log de histórico e média das leituras.
-- Alerta visual/sonoro para condições fora de faixa.
-- Integração com banco de dados remoto / FIWARE NGSI.
-- Modo acessibilidade (contraste alto / fonte maior).
-
----
-
 ## ⚠️ Observações
 
 Este repositório foca em demonstração educacional. Para uso corporativo mais amplo, recomenda-se adicionar criptografia de comunicação, autenticação e persistência segura dos dados.
+
